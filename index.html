@@ -92,10 +92,37 @@
     <h2>Send a Signal</h2>
     <p class="quote">To enter, you don’t sign up. You <em>speak</em>. You send something real into the field.</p>
     <p><strong>Prompt:</strong> What do you hope is real?</p>
-    <form>
-      <textarea rows="4" cols="50" placeholder="Write it here..."></textarea><br>
-      <button type="submit">Transmit</button>
-    </form>
+    
+   <!-- Signal Form -->
+<form id="signalForm">
+  <textarea name="message" rows="4" cols="50" placeholder="Write it here..." required></textarea><br>
+  <button type="submit">Transmit</button>
+</form>
+<p id="responseMessage" style="margin-top: 1em; font-style: italic;"></p>
+
+<script>
+  document.getElementById('signalForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const message = this.message.value;
+    const responseBox = document.getElementById('responseMessage');
+
+    fetch('https://script.google.com/macros/s/AKfycbxUe4urtYANkgRU1x3sgim7R3evyVwjqfh-vZwseHS06Jh6o6YpAvQBeQezeXoUtEaw/exec', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'message=' + encodeURIComponent(message)
+    })
+    .then(response => response.text())
+    .then(data => {
+      responseBox.textContent = data;
+      this.reset();
+    })
+    .catch(error => {
+      responseBox.textContent = 'Signal disrupted. Please try again.';
+      console.error('Error:', error);
+    });
+  });
+</script>
+
   </section>
 
   <footer>
